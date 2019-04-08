@@ -1,0 +1,194 @@
+<mujoco model="simrobot">
+    <compiler angle="radian" coordinate="local" inertiafromgeom="auto" meshdir="meshes/"/>
+    <option gravity="0 0 -9.81" integrator="RK4" iterations="30" timestep="0.001"/>
+    <default>
+        <joint armature="1" damping="1" frictionloss="0" limited="true" stiffness="0"/>
+        <geom conaffinity="1" condim="3" contype="1" friction=".5 .1 .1" margin="0.002"/>
+        <motor ctrllimited="true"/>
+        <position ctrllimited="true"/>
+    </default>
+    <asset>
+        <!-- <mesh file="mustard_bottle.stl" name="mustard_bottle"/>-->
+        <texture builtin="gradient" height="100" rgb1=".4 .6 .8" rgb2="0.9 0.9 0.9" type="skybox" width="100"/>
+        <texture builtin="checker" height="100" name="texplane" rgb1=".2 .3 .4" rgb2=".1 0.15 0.2" type="2d"
+                 width="100"/>
+        <texture builtin="flat" height="32" name="texgeom" rgb1="1 1 1" type="cube" width="32"/>
+        <texture builtin="flat" height="32" name="gripper_finger_tex" rgb1="0 0 0" type="cube" width="32"/>
+        <texture builtin="flat" height="32" name="gripper_tex" rgb1="0.5 0.1 0.1" type="cube" width="32"/>
+        <texture builtin="flat" height="32" name="arm_tex" rgb1="0.5 0.1 0.1" type="cube" width="32"/>
+        <texture builtin="flat" height="32" name="l6_tex" rgb1="0 0 0" type="cube" width="32"/>
+        <texture builtin="flat" height="32" name="head_tex" rgb1="1 1 1" type="cube" width="32"/>
+        <texture builtin="flat" height="32" name="torso_tex" rgb1="1 1 1" type="cube" width="32"/>
+        <texture builtin="flat" height="32" name="base_tex" rgb1="0.5 0.1 0.1" type="cube" width="32"/>
+        <texture builtin="flat" height="32" name="table_tex" rgb1="0.5 0.86 0.60" type="cube" width="32"/>
+        <material name="gripper_finger_mat" shininess="0.03" specular="0.75" texture="gripper_finger_tex"/>
+        <material name="gripper_mat" shininess="0.03" specular="0.75" texture="gripper_tex"/>
+        <material name="arm_mat" shininess="0.03" specular="0.75" texture="arm_tex"/>
+        <material name="l6_mat" shininess="0.03" specular="0.75" texture="l6_tex"/>
+        <material name="head_mat" shininess="0.03" specular="0.75" texture="head_tex"/>
+        <material name="torso_mat" shininess="0.03" specular="0.75" texture="torso_tex"/>
+        <material name="base_mat" shininess="0.03" specular="0.75" texture="base_tex"/>
+        <material name="table_mat" shininess="0.03" specular="0.75" texture="table_tex"/>
+    </asset>
+    <worldbody>
+        <light cutoff="45" diffuse=".8 .8 .8" dir="0 0.25 -1" directional="false" name="light" pos="0 -2.0 8.0"
+               specular="0.3 0.3 0.3"/>
+        <body name="kinect" pos="0.5 -1.5 1.25"
+              quat="0.68301270255993607 -0.18301270152365204 0.18301270185214089 0.68301270133399883">
+            <body euler="1.5707 -1.5707 0" name="head_camera" pos="0.032 -0.097 0">
+                <camera euler="0 0 0" fovy="54" name="head_camera" pos="0 0 0"/>
+            </body>
+            <!-- <camera euler="1.5707 -1.5707 0" fovy="54" name="head_camera" pos="-0.096 0.126 0.0"/>-->
+            <!-- <camera euler="1.5707 -1.5707 0" fovy="54" name="head_camera" pos="-0.096 0.126 0.0"/>-->
+            <site name="kinect" pos="0 0 0" rgba="0.1 0.1 0.1 1" size="0.032 0.125 0.021" type="box"/>
+        </body>
+        <body name="base_link" pos="0 0 0">
+            <inertial diaginertia="0.00740351 0.00681776 0.00672942" mass="2.0687" pos="-0.0006241 -2.8025e-05 0.065404"
+                      quat="-0.209285 0.674441 0.227335 0.670558"/>
+            <geom fromto="0 0 0 0 0 0.08" material="base_mat" name="base_link" rgba="0.5 0.1 0.1 1" size="0.068"
+                  type="cylinder"/>
+        </body>
+        <body name="l0" pos="0 0 0.08">
+            <inertial diaginertia="0.0651588 0.0510944 0.0186218" mass="5.3213" pos="0.024366 0.010969 0.14363"
+                      quat="0.894823 0.00899958 -0.170275 0.412573"/>
+            <joint axis="0 0 1" damping="15.0" frictionloss="5.0" limited="true" name="j0" pos="0 0 0"
+                   range="-3.0503 3.0503"/>
+            <site name="j0" pos="0 0 0" rgba="1 1 1 1" size="0.068 0.01 0.00" type="cylinder"/>
+            <geom fromto="0 0 0 0 0 0.29" material="arm_mat" name="gl0" rgba="0.5 0.1 0.1 1" size="0.068"
+                  type="capsule"/>
+            <body name="l1" pos="0.081 0.05 0.237" quat="0.5 -0.5 0.5 0.5">
+                <inertial diaginertia="0.0224339 0.0221624 0.0097097" mass="4.505" pos="-0.0030849 -0.026811 0.092521"
+                          quat="0.424888 0.891987 0.132364 -0.0794296"/>
+                <joint axis="0 0 1" damping="5.0" frictionloss="2.0" limited="true" name="j1" pos="0 0 0"
+                       range="-3.8095 2.2736"/>
+                <site name="j1" pos="0 0 0" rgba="1 1 1 1" size="0.068 0.01 0.00" type="cylinder"/>
+                <geom fromto="0 0 0 0 0 0.119" material="arm_mat" name="gl1_1" rgba="0.5 0.1 0.1 1" size="0.068"
+                      type="capsule"/>
+                <geom fromto="0 0 0.1336 0 -0.140 0.1336" material="arm_mat" name="gl1_2" rgba="0.5 0.1 0.1 1"
+                      size="0.053" type="cylinder"/>
+                <body name="l2" pos="0 -0.140 0.1336" quat="0.707107 0.707107 0 0">
+                    <inertial diaginertia="0.0257928 0.025506 0.00292515" mass="1.745"
+                              pos="-0.00016044 -0.014967 0.13582" quat="0.707831 -0.0524761 0.0516007 0.702537"/>
+                    <joint axis="0 0 1" damping="5.0" frictionloss="2.0" limited="true" name="j2" pos="0 0 0"
+                           range="-3.0426 3.0426"/>
+                    <site name="j2" pos="0 0 0" rgba="1 1 1 1" size="0.053 0.01 0.00" type="cylinder"/>
+                    <geom fromto="0 0 0 0 0 0.263" material="arm_mat" name="gl2" rgba="0.5 0.1 0.1 1" size="0.053"
+                          type="capsule"/>
+                    <body name="l3" pos="0 -0.042 0.263" quat="0.707107 -0.707107 0 0">
+                        <inertial diaginertia="0.0102404 0.0096997 0.00369622" mass="2.5097"
+                                  pos="-0.0048135 -0.0281 -0.084154" quat="0.902999 0.385391 -0.0880901 0.168247"/>
+                        <joint axis="0 0 1" damping="15.0" frictionloss="5.0" limited="true" name="j3" pos="0 0 0"
+                               range="-3.0439 3.0439"/>
+                        <site name="j3" pos="0 0 0" rgba="1 1 1 1" size="0.052 0.01 0.00" type="cylinder"/>
+                        <geom fromto="0 0 0 0 0 -0.1195" material="arm_mat" name="gl3_1" rgba="0.5 0.1 0.1 1"
+                              size="0.052" type="capsule"/>
+                        <geom fromto="0 0 -0.1265 0 -0.1265 -0.1265" material="arm_mat" name="gl3_2"
+                              rgba="0.5 0.1 0.1 1" size="0.045" type="capsule"/>
+                        <body name="l4" pos="0 -0.1265 -0.1265" quat="0.707107 0.707107 0 0">
+                            <inertial diaginertia="0.0136549 0.0135493 0.00127353" mass="1.1136"
+                                      pos="-0.0018844 0.0069001 0.1341" quat="0.803612 0.031257 -0.0298334 0.593582"/>
+                            <!-- <joint axis="0 0 1" damping="6.0" frictionloss="1.0" limited="true" name="j4" pos="0 0 0" range="-2.9761 2.9761"/>
+                            <site name="j4" pos="0 0 0" rgba="1 1 1 1" size="0.045 0.01 0.00" type="cylinder"/> -->
+                            <geom fromto="0 0 0 0 0 0.275" material="arm_mat" name="gl4" rgba="0.5 0.1 0.1 1"
+                                  size="0.045" type="capsule"/>
+                            <body name="l5" pos="0 0.040 0.275" quat="0.707107 -0.707107 0 0">
+                                <inertial diaginertia="0.00474131 0.00422857 0.00190672" mass="1.5625"
+                                          pos="0.0061133 -0.023697 0.076416"
+                                          quat="0.404076 0.9135 0.0473125 0.00158335"/>
+                                <joint axis="0 0 1" damping="5.5" frictionloss="1.2" limited="true" name="j5"
+                                       pos="0 0 0" range="-2.9761 2.9761"/>
+                                <site name="j5" pos="0 0 0" rgba="1 1 1 1" size="0.042 0.01 0.00" type="cylinder"/>
+                                <geom fromto="0 0 0 0 0 0.0958" material="arm_mat" name="gl5_1" rgba="0.5 0.1 0.1 1"
+                                      size="0.042" type="capsule"/>
+                                <geom fromto="0 0 0.0958 0 -0.076 0.0958" material="arm_mat" name="gl5_2"
+                                      rgba="0.5 0.1 0.1 1" size="0.041" type="cylinder"/>
+                                <!-- <body name="l6" pos="0 -0.076 0.0958" euler="-1.5708 3.1416 0">-->
+                                <body name="l6" pos="0 -0.076 0.0958"
+                                      quat="-2.59734e-06 2.59735e-06 0.707105 -0.707108">
+                                    <inertial diaginertia="0.000360258 0.000311068 0.000214974" mass="0.3292"
+                                              pos="-8.0726e-06 0.0085838 -0.0049566"
+                                              quat="0.479044 0.515636 -0.513069 0.491322"/>
+                                    <!-- <joint axis="0 0 1" damping="1.0" frictionloss="0.5" limited="true" name="j6" pos="0 0 0" range="-4.7124 4.7124"/>
+                                    <site name="j6" pos="0 0 0" rgba="1 1 1 1" size="0.041 0.01 0.00" type="cylinder"/> -->
+                                    <geom fromto="0 0 0 0 0 0.0488" material="l6_mat" name="gl6" rgba="0 0 0 1"
+                                          size="0.041" type="cylinder"/>
+                                    <body name="connector_plate_base" pos="0 0 0.0488">
+                                        <inertial diaginertia="0.000123974 6.98704e-05 6.81858e-05" mass="0.1609"
+                                                  pos="-0.00032768 -2.5612e-05 0.0062193"
+                                                  quat="0.483054 0.500901 -0.498692 0.516781"/>
+                                        <geom fromto="0 0 0 0 0 0.0194" material="l6_mat" name="gconnector_base"
+                                              rgba="0 0 0 1" size="0.041" type="cylinder"/>
+                                        <body name="connector_plate_mount" pos="0 0 0.0151">
+                                            <inertial diaginertia="0 0 0" mass="0" pos="0 0 0.0151"/>
+                                            <body name="electric_gripper_base" pos="0 0 0">
+                                                <inertial diaginertia="3e-08 2e-08 2e-08" mass="0.3" pos="0 0 0"
+                                                          quat="-0.5 0.5 0.5 0.5"/>
+                                                <geom material="gripper_mat" name="ggripper_base" pos="0.004 0 0.025"
+                                                      quat="0 0 0.707107 0.707107" rgba="0.5 0.1 0.1 1"
+                                                      size="0.029 0.05" type="cylinder"/>
+                                                <site name="ref_pt" pos="0.003 0 0.05552" rgba="1 1 1 1"
+                                                      size="0.005 0.005 0.005"/>
+                                                <body name="gripper_l_finger" pos="0.003 -0.0015 0.04552">
+                                                    <inertial diaginertia="0.01 0.01 0.01" mass="0.02" pos="0 0 0"
+                                                              quat="0 0 0 -1"/>
+                                                    <joint axis="0 1 0" damping="2" limited="true"
+                                                           name="gripper_l_finger_joint" pos="0 0 0" range="0 0.020833"
+                                                           type="slide"/>
+                                                    <geom material="gripper_finger_mat" name="ggripper_l_finger1"
+                                                          pos="0 0.01725 0.04" quat="0 0 0 -1" rgba="0 0 0 1"
+                                                          size="0.005 0.00675 0.0375" type="box"/>
+                                                    <geom material="gripper_finger_mat" name="ggripper_l_finger2"
+                                                          pos="-0.005 -0.003 0.0083" quat="0 0 0 -1" rgba="0 0 0 1"
+                                                          size="0.005 0.025 0.0085" type="box"/>
+                                                    <body name="gripper_l_finger_tip" pos="0 0.01725 0.075">
+                                                        <inertial diaginertia="0.01 0.01 0.01" mass="0.01" pos="0 0 0"
+                                                                  quat="0 0 0 1"/>
+                                                        <geom material="gripper_finger_mat" name="ggripper_l_finger_tip"
+                                                              pos="0 -0.0045 -0.015" quat="0 0 0 1" rgba="0 0 0 1"
+                                                              size="0.008 0.00325 0.0185" type="box"/>
+                                                    </body>
+                                                </body>
+                                                <body name="gripper_r_finger" pos="0.003 0.0015 0.04552">
+                                                    <inertial diaginertia="0.01 0.01 0.01" mass="0.02" pos="0 0 0"/>
+                                                    <joint axis="0 1 0" damping="2" limited="true"
+                                                           name="gripper_r_finger_joint" pos="0 0 0" range="-0.020833 0"
+                                                           type="slide"/>
+                                                    <geom material="gripper_finger_mat" name="ggripper_r_finger1"
+                                                          pos="0 -0.01725 0.04" rgba="0 0 0 1"
+                                                          size="0.005 0.00675 0.0375" type="box"/>
+                                                    <geom material="gripper_finger_mat" name="ggripper_r_finger2"
+                                                          pos="0.005 0.003 0.0083" rgba="0 0 0 1"
+                                                          size="0.005 0.025 0.0085" type="box"/>
+                                                    <body name="gripper_r_finger_tip" pos="0 -0.01725 0.075">
+                                                        <inertial diaginertia="0.01 0.01 0.01" mass="0.01" pos="0 0 0"/>
+                                                        <geom material="gripper_finger_mat" name="ggripper_r_finger_tip"
+                                                              pos="0 0.0045 -0.015" rgba="0 0 0 1"
+                                                              size="0.008 0.00325 0.0185" type="box"/>
+                                                    </body>
+                                                </body>
+                                            </body>
+                                        </body>
+                                    </body>
+                                </body>
+                            </body>
+                        </body>
+                    </body>
+                </body>
+            </body>
+        </body>
+        <body name="target" pos="0.0 0 -0.01">
+            <site name="target" pos="0.0 0. 0.02" rgba="0. 0. 1.0 1" size="0.02" type="sphere"/>
+        </body>
+    </worldbody>
+    <actuator>
+        <motor ctrlrange="-80.0 80.0" joint="j0" name="j0"/>
+        <motor ctrlrange="-80.0 80.0" joint="j1" name="j1"/>
+        <motor ctrlrange="-40.0 40.0" joint="j2" name="j2"/>
+        <motor ctrlrange="-40.0 40.0" joint="j3" name="j3"/>
+        <!-- <motor ctrlrange="-9.0 9.0" joint="j4" name="j4"/> -->
+        <motor ctrlrange="-9.0 9.0" joint="j5" name="j5"/>
+        <!-- <motor ctrlrange="-9.0 9.0" joint="j6" name="j6"/> -->
+        <position ctrlrange="0 0.020833" joint="gripper_l_finger_joint" kp="10" name="gripper_l_finger_joint"/>
+        <position ctrlrange="-0.020833 0" joint="gripper_r_finger_joint" kp="10" name="gripper_r_finger_joint"/>
+    </actuator>
+</mujoco>
